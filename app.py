@@ -12,10 +12,13 @@ def write():
 @app.route( "/msg/", methods = ['POST'] )
 def auth():
     print request.headers
-    print request.form
-    print request.form["username"]
+    print request.form[ "username" ]
     print request.form[ "password" ]
-    return "You good"
+    
+    msg = "Invalid Login: Dankness Level Too Low"
+    if ( request.form[ "username" ] == "Dank" ) and ( request.form[ "password" ] == "Memes" ):
+        msg = "Welcome! Access To Meme Collection Granted!"
+    return render_template( "auth.html", validation = msg )
 
 if __name__ == "__main__":
     #enable debugging, auto-restarting of server when this file is modified
