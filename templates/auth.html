@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+  <style>
+    body {
+    font-family: Arial;
+    text-align: center; 
+    }
+  </style>
+  </head>
+  <body>
+    {{ validation }}
+    {% if "Invalid" in validation %}
+        <br><br>
+        <a href="/">Click Here To Try Again.</a>
+    {% endif %}
+  </body>
+</html>
