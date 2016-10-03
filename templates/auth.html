@@ -9,8 +9,8 @@
   </style>
   </head>
   <body>
-    {{ validation }}
-    {% if "Invalid" in validation %}
+    {{ message }}
+    {% if not validation %}
         <br><br>
         <a href="/">Click Here To Try Again.</a>
     {% endif %}
