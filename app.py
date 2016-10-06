@@ -1,26 +1,32 @@
 #Yikai Wang
 #Period 6 SoftDev
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for, session
 from utils import authenticate
+import os
 
 app = Flask(__name__) #create Flask object
+app.secret_key = "dankMemes"
+
 @app.route( "/" )
 def home():
     print request.headers
+    print session
+    if 'username' in session and 'password' in session:
+        redirect( url_for( "authLogin" ) )
     return render_template( "home.html" )
 
-@app.route( "/login" )
+@app.route( "/login/" )
 def login():
     print request.headers
     return render_template( "login.html" )
 
-@app.route( "/register" )
+@app.route( "/register/" )
 def register():
     print request.headers
     return render_template( "register.html" )
 
-@app.route( "/msg/loginauth", methods = ['POST'] )
+@app.route( "/msg/loginauth/", methods = ['POST'] )
 def authLogin():
     print request.headers
     print request.form[ "username" ]
@@ -33,7 +39,7 @@ def authLogin():
         valid = True
     return render_template( "auth.html", message = msg, validation = valid )
 
-@app.route( "/msg/regauth", methods = ['POST'] )
+@app.route( "/msg/regauth/", methods = ['POST'] )
 def authReg():
     print request.headers
     print request.form[ "username" ]
