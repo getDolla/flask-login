@@ -1,7 +1,7 @@
 #Yikai Wang
 #Period 6 SoftDev
 
-from flask import Flask, render_template, request, url_for, session
+from flask import Flask, render_template, request, url_for, session, redirect
 from utils import authenticate
 import os
 
@@ -13,7 +13,7 @@ def home():
     print request.headers
     print session
     if 'username' in session and 'password' in session:
-        redirect( url_for( "authLogin" ) )
+        return redirect( url_for( "authLogin" ) )
     return render_template( "home.html" )
 
 @app.route( "/login/" )
@@ -37,6 +37,9 @@ def authLogin():
     if authenticate.authenticate(request.form[ "username" ], request.form[ "password" ]):
         msg = "Welcome! Access To Meme Collection Granted!"
         valid = True
+        session[ "username" ] = request.form[ "username" ]
+        session[ "password" ] = request.form[ "password" ]
+        return render_template( "welcome.html", message = msg );
     return render_template( "auth.html", message = msg, validation = valid )
 
 @app.route( "/msg/regauth/", methods = ['POST'] )
