@@ -13,7 +13,7 @@ def home():
     print request.headers
     print session
     if 'username' in session and 'password' in session:
-        return redirect( url_for( "authLogin" ) )
+        return redirect( url_for( "welcome" ) )
     return render_template( "home.html" )
 
 @app.route( "/login/" )
@@ -32,15 +32,21 @@ def authLogin():
     print request.form[ "username" ]
     print request.form[ "password" ]
 
-    valid = False
     msg = "Invalid Login: Dankness Level Too Low"
     if authenticate.authenticate(request.form[ "username" ], request.form[ "password" ]):
-        msg = "Welcome! Access To Meme Collection Granted!"
-        valid = True
         session[ "username" ] = request.form[ "username" ]
         session[ "password" ] = request.form[ "password" ]
-        return render_template( "welcome.html", message = msg );
-    return render_template( "auth.html", message = msg, validation = valid )
+        return redirect( url_for( "welcome" ) )
+    return render_template( "auth.html", message = msg )
+
+@app.route( "/msg/welcome/" )
+def welcome():
+    print request.headers
+    print session
+    msg = "Nice Hacks Bro!"
+    if authenticate.authenticate(session[ "username" ], session[ "password" ]):
+        msg = "Welcome! Access To Meme Collection Granted!"
+    return render_template( "welcome.html", message = msg );
 
 @app.route( "/msg/regauth/", methods = ['POST'] )
 def authReg():
@@ -49,12 +55,15 @@ def authReg():
     print request.form[ "pass1" ]
     print request.form[ "pass2" ]
 
-    valid = False
     msg = authenticate.createAccount( request.form )
-    if "Account" in msg and " created!" in msg:
-        valid = True
-    return render_template( "auth.html", message = msg, validation = valid )
-    
+    return render_template( "auth.html", message = msg )
+
+@app.route( "/logout/" )
+def logout():
+    session.pop( "username" )
+    session.pop( "password" )
+    return redirect( url_for( "home" ) )
+
 if __name__ == "__main__":
     #enable debugging, auto-restarting of server when this file is modified
     app.debug = True 
